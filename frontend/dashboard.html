@@ -21,7 +21,7 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        fetch("http://localhost:5000/locations")
+        fetch("https://location-tracker-backend.onrender.com/locations")
             .then(res => res.json())
             .then(data => {
                 data.forEach(item => {
