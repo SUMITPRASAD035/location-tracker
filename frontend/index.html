@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Share Your Location</title>
+</head>
+<body>
+    <h2>Share Your Location</h2>
+    <p>We need your location for improving our service. Your data will remain private.</p>
+    <button onclick="getLocation()">Share My Location</button>
+    <p id="status"></p>
+
+    <script>
+        async function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const userAgent = navigator.userAgent;
+                    const language = navigator.language;
+                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+                    // Fetch IP info
+                    const ipInfo = await fetch('https://ipinfo.io/json?token=89c6e154a78451')
+                                        .then(res => res.json());
+
+                    const data = {
+                        latitude,
+                        longitude,
+                        userAgent,
+                        language,
+                        timezone,
+                        ip: ipInfo.ip,
+                        city: ipInfo.city,
+                        region: ipInfo.region,
+                        country: ipInfo.country
+                    };
+
+                    document.getElementById("status").innerText = `Location: ${latitude}, ${longitude}`;
+
+                    // Send to backend
+                    fetch("http://localhost:5000/save-location", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data)
+                    }).then(() => alert("Location saved!"));
+                }, showError);
+            } else {
+                document.getElementById("status").innerText = "Geolocation is not supported.";
+            }
+        }
+
+        function showError(error) {
+            document.getElementById("status").innerText = "Error: " + error.message;
+        }
+    </script>
+</body>
+</html>
