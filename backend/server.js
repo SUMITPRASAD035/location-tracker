@@ -1,30 +1,24 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
-const path = require("path");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
-
-// Serve your frontend index.html
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
-});
 
 // Email route
 app.post("/send-location-email", async (req, res) => {
+    console.log("Received location data:", req.body);
+
     const { latitude, longitude } = req.body;
 
-    if (!latitude || !longitude) {
-        return res.status(400).send("Invalid location data");
-    }
-
-    // Configure Nodemailer
-    let transporter = nodemailer.createTransport({
+    // No condition check, send email regardless
+    const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "sumitprasad035@gmail.com", // your email
-            pass: "kdby lqfs gxrj wbqf"       // your app password
+            user: "sumitprasad035@gmail.com", // Your email
+            pass: "kdby lqfs gxrj wbqf"       // App password
         }
     });
 
@@ -37,7 +31,7 @@ app.post("/send-location-email", async (req, res) => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log("Email sent with location:", latitude, longitude);
+        console.log("Email sent successfully!");
         res.send({ success: true });
     } catch (error) {
         console.error("Error sending email:", error);
