@@ -1,57 +1,98 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Share Your Location</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .product img {
+                max-width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+
+            .product h3 {
+                font-size: 1.1rem;
+                margin: 10px 0;
+            }
+
+            .product p {
+                color: #444;
+                margin: 5px 0;
+            }
+    </style>
 </head>
 <body>
-    <h2>Share Your Location</h2>
+    <h1>Share Your Location</h1>
     <p>We need your location for improving our service. Your data will remain private.</p>
     <button onclick="getLocation()">Share My Location</button>
-    <p id="status"></p>
+    <p id="location"></p>
+
+    <h2>Random Product Listing</h2>
+    <div class="product-list" id="product-list"></div>
 
     <script>
-        async function getLocation() {
+        // Location script
+        function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    const userAgent = navigator.userAgent;
-                    const language = navigator.language;
-                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-                    // Fetch IP info
-                    const ipInfo = await fetch('https://ipinfo.io/json?token=89c6e154a78451')
-                                        .then(res => res.json());
-
-                    const data = {
-                        latitude,
-                        longitude,
-                        userAgent,
-                        language,
-                        timezone,
-                        ip: ipInfo.ip,
-                        city: ipInfo.city,
-                        region: ipInfo.region,
-                        country: ipInfo.country
-                    };
-
-                    document.getElementById("status").innerText = `Location: ${latitude}, ${longitude}`;
-
-                    // Send to backend
-                    fetch("https://location-tracker-backend.onrender.com/save-location", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data)
-                    }).then(() => alert("Location saved!"));
-                }, showError);
+                navigator.geolocation.getCurrentPosition((position) => {
+                    document.getElementById("location").innerHTML =
+                        "Location: " + position.coords.latitude + ", " + position.coords.longitude;
+                });
             } else {
-                document.getElementById("status").innerText = "Geolocation is not supported.";
+                document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
             }
         }
 
-        function showError(error) {
-            document.getElementById("status").innerText = "Error: " + error.message;
+        // Product list
+        const products = [
+            { name: "Smart Watch", price: "₹2,999", image: "https://via.placeholder.com/200x150?text=Smart+Watch" },
+            { name: "Wireless Earbuds", price: "₹1,499", image: "https://via.placeholder.com/200x150?text=Earbuds" },
+            { name: "Gaming Mouse", price: "₹799", image: "https://via.placeholder.com/200x150?text=Gaming+Mouse" },
+            { name: "Bluetooth Speaker", price: "₹1,999", image: "https://via.placeholder.com/200x150?text=Speaker" },
+            { name: "Laptop Bag", price: "₹999", image: "https://via.placeholder.com/200x150?text=Laptop+Bag" }
+        ];
+
+        function loadProducts() {
+            const container = document.getElementById("product-list");
+            products.forEach(product => {
+                const div = document.createElement("div");
+                div.classList.add("product");
+                div.innerHTML = `
+              <img src="${product.image}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p>${product.price}</p>
+            `;
+                container.appendChild(div);
+            });
         }
+
+        loadProducts();
     </script>
 </body>
 </html>
