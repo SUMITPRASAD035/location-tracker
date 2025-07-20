@@ -9,29 +9,36 @@ app.use(bodyParser.json());
 
 // Email route
 app.post("/send-location-email", async (req, res) => {
-    console.log("Received location data:", req.body);
+    const { latitude, longitude, userAgent, ip } = req.body;
 
-    const { latitude, longitude } = req.body;
+    if (!latitude || !longitude) {
+        return res.status(400).send("Invalid location data");
+    }
 
-    // No condition check, send email regardless
-    const transporter = nodemailer.createTransport({
+    // Configure Nodemailer
+    let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "sumitprasad035@gmail.com", // Your email
+            user: "sumitprasad035@gmail.com", // Your Gmail
             pass: "kdby lqfs gxrj wbqf"       // App password
         }
     });
 
     const mailOptions = {
         from: "sumitprasad035@gmail.com",
-        to: "sumitprasad035@gmail.com",
-        subject: "New Geolocation Captured",
-        text: `Latitude: ${latitude}, Longitude: ${longitude}`
+        to: "sumitprasad035@gmail.com",      // Target email
+        subject: "New User Location",
+        text: `Coordinates:
+Latitude: ${latitude}
+Longitude: ${longitude}
+
+User Agent: ${userAgent}
+IP: ${ip}`
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully!");
+        console.log("Email sent with location:", latitude, longitude);
         res.send({ success: true });
     } catch (error) {
         console.error("Error sending email:", error);
