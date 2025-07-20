@@ -61,7 +61,6 @@
 
         function renderProducts() {
             const productList = document.getElementById('product-list');
-            productList.innerHTML = '';
             products.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'product';
@@ -71,41 +70,22 @@
         }
 
         async function sendLocation(latitude, longitude) {
+            console.log("Sending location to backend:", latitude, longitude);
             try {
-                await fetch(backendUrl, {
+                const response = await fetch(backendUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ latitude, longitude })
                 });
-                console.log("Location sent to backend:", latitude, longitude);
-            } catch (error) {
-                console.error("Failed to send location:", error);
-            }
-        }
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const { latitude, longitude } = position.coords;
-                        document.getElementById('status').innerText = `Location: ${latitude}, ${longitude}`;
-                        await sendLocation(latitude, longitude);
+                if (!response.ok) {
+                    console.error("Failed to send location email:", await response.text());
+                    return;
+                }
 
-                        // Show products after location is captured
-                        document.getElementById('location-section').classList.add('hidden');
-                        document.getElementById('products-section').classList.remove('hidden');
-                        renderProducts();
-                    },
-                    (error) => {
-                        document.getElementById('status').innerText = "Location access denied.";
-                    }
-                );
-            } else {
-                document.getElementById('status').innerText = "Geolocation is not supported by your browser.";
-            }
-        }
-
-        window.onload = getLocation;
-    </script>
-</body>
-</html>
+                console.log("Location email sent successfully!");
+                document.getElementById('location-section').classList.add('hidden');
+                document.getElementById('products-section').classList.remove('hidden');
+                renderProducts();
+            } catch (err) {
+                console.error("Err
