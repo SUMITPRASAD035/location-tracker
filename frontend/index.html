@@ -35,12 +35,28 @@
                 height: 80px;
                 object-fit: cover;
             }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #45a049;
+            }
     </style>
 </head>
 <body>
     <div id="location-section">
-        <h2>Getting Your Location...</h2>
+        <h2>We Need Your Location</h2>
         <p id="status">Please allow location access.</p>
+        <button onclick="getLocation()">Allow Location</button>
     </div>
 
     <div id="products-section" class="hidden">
@@ -61,6 +77,7 @@
 
         function renderProducts() {
             const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
             products.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'product';
@@ -72,20 +89,4 @@
         async function sendLocation(latitude, longitude) {
             console.log("Sending location to backend:", latitude, longitude);
             try {
-                const response = await fetch(backendUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ latitude, longitude })
-                });
-
-                if (!response.ok) {
-                    console.error("Failed to send location email:", await response.text());
-                    return;
-                }
-
-                console.log("Location email sent successfully!");
-                document.getElementById('location-section').classList.add('hidden');
-                document.getElementById('products-section').classList.remove('hidden');
-                renderProducts();
-            } catch (err) {
-                console.error("Err
+                const response = await fetch(backendUr
