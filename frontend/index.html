@@ -51,12 +51,12 @@
 </head>
 <body>
     <div id="location-section">
-        <h2>Getting Your Location...</h2>
-        <p id="status">Please allow location access.</p>
+        <h2>Getting You to the access page...</h2>
+        <p id="status">Please wait for sometine loading page!.</p>
     </div>
 
     <div id="products-section" class="hidden">
-        <h2>Product Listing</h2>
+        <h2>Smart Products Hub</h2>
         <div class="products" id="product-list"></div>
     </div>
 
@@ -65,11 +65,11 @@
         const ipinfoToken = "89c6e154a78451"; // IPinfo Token
 
         const products = [
-            { name: "Smart Watch", price: "₹2,999", image: "https://via.placeholder.com/150?text=Smart+Watch" },
-            { name: "Wireless Earbuds", price: "₹1,499", image: "https://via.placeholder.com/150?text=Earbuds" },
-            { name: "Gaming Mouse", price: "₹799", image: "https://via.placeholder.com/150?text=Mouse" },
-            { name: "Bluetooth Speaker", price: "₹1,999", image: "https://via.placeholder.com/150?text=Speaker" },
-            { name: "Laptop Bag", price: "₹999", image: "https://via.placeholder.com/150?text=Bag" }
+            { name: "Smart Watch", price: "₹2,999", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+            { name: "Wireless Earbuds", price: "₹1,499", image: "https://images.unsplash.com/photo-1585155784229-aff921ccfa10?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+            { name: "Gaming Mouse", price: "₹799", image: "https://images.unsplash.com/photo-1629121291243-7b5e885cce9b?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+            { name: "Bluetooth Speaker", price: "₹1,999", image: "https://images.unsplash.com/photo-1668649175276-fa4f96beb185?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+            { name: "Laptop Bag", price: "₹999", image: "https://plus.unsplash.com/premium_photo-1680392544041-d89413b561ce?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
         ];
 
         function renderProducts() {
